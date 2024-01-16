@@ -10,19 +10,21 @@
 fn main() {
     let data = "Rust is great!".to_string();
 
-    get_char(data);
+    let should_be_a_char = get_char(&data);
 
-    string_uppercase(&data);
+    string_uppercase(data);
+
+    println!("quirk output => {should_be_a_char}")
 }
 
 // Should not take ownership
-fn get_char(data: String) -> char {
+fn get_char(data: &String) -> char {
     data.chars().last().unwrap()
 }
 
 // Should take ownership
-fn string_uppercase(mut data: &String) {
-    data = &data.to_uppercase();
+fn string_uppercase(mut data: String) {
+    data = data.to_uppercase();
 
     println!("{}", data);
 }

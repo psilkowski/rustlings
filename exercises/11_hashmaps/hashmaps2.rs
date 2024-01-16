@@ -18,7 +18,7 @@
 
 use std::collections::HashMap;
 
-#[derive(Hash, PartialEq, Eq)]
+#[derive(Hash, PartialEq, Eq, Debug)]
 enum Fruit {
     Apple,
     Banana,
@@ -40,54 +40,46 @@ fn fruit_basket(basket: &mut HashMap<Fruit, u32>) {
         // TODO: Insert new fruits if they are not already present in the
         // basket. Note that you are not allowed to put any type of fruit that's
         // already present!
+
+        basket.entry(fruit).or_insert(2);
     }
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
+// Don't modify this function!
+fn get_fruit_basket() -> HashMap<Fruit, u32> {
+    let mut basket = HashMap::<Fruit, u32>::new();
+    basket.insert(Fruit::Apple, 4);
+    basket.insert(Fruit::Mango, 2);
+    basket.insert(Fruit::Lychee, 5);
+    basket
+}
 
-    // Don't modify this function!
-    fn get_fruit_basket() -> HashMap<Fruit, u32> {
-        let mut basket = HashMap::<Fruit, u32>::new();
-        basket.insert(Fruit::Apple, 4);
-        basket.insert(Fruit::Mango, 2);
-        basket.insert(Fruit::Lychee, 5);
+fn main() {
 
-        basket
-    }
+    let mut basket = get_fruit_basket();
+    fruit_basket(&mut basket);
+    assert_eq!(*basket.get(&Fruit::Apple).unwrap(), 4);
+    assert_eq!(*basket.get(&Fruit::Mango).unwrap(), 2);
+    assert_eq!(*basket.get(&Fruit::Lychee).unwrap(), 5);
 
-    #[test]
-    fn test_given_fruits_are_not_modified() {
-        let mut basket = get_fruit_basket();
-        fruit_basket(&mut basket);
-        assert_eq!(*basket.get(&Fruit::Apple).unwrap(), 4);
-        assert_eq!(*basket.get(&Fruit::Mango).unwrap(), 2);
-        assert_eq!(*basket.get(&Fruit::Lychee).unwrap(), 5);
-    }
+    let mut basket1 = get_fruit_basket();
+    fruit_basket(&mut basket1);
+    let count_fruit_kinds = basket1.len();
+    assert!(count_fruit_kinds >= 5);
 
-    #[test]
-    fn at_least_five_types_of_fruits() {
-        let mut basket = get_fruit_basket();
-        fruit_basket(&mut basket);
-        let count_fruit_kinds = basket.len();
-        assert!(count_fruit_kinds >= 5);
-    }
-
-    #[test]
-    fn greater_than_eleven_fruits() {
-        let mut basket = get_fruit_basket();
-        fruit_basket(&mut basket);
-        let count = basket.values().sum::<u32>();
-        assert!(count > 11);
-    }
+    let mut basket2 = get_fruit_basket();
+    fruit_basket(&mut basket2);
+    let count = basket2.values().sum::<u32>();
+    assert!(count > 11);
     
-    #[test]
-    fn all_fruit_types_in_basket() {
-        let mut basket = get_fruit_basket();
-        fruit_basket(&mut basket);
-        for amount in basket.values() {
-            assert_ne!(amount, &0);
-        }
+    let mut basket3 = get_fruit_basket();
+    fruit_basket(&mut basket3);
+    for amount in basket3.values() {
+        assert_ne!(amount, &0);
     }
+
+    for (key, val) in basket3.iter() {
+        println!("key: {:#?} val: {val}", key);
+    }
+
 }

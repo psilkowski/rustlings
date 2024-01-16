@@ -39,48 +39,49 @@ fn build_scores_table(results: String) -> HashMap<String, Team> {
         // will be the number of goals conceded from team_2, and similarly
         // goals scored by team_2 will be the number of goals conceded by
         // team_1.
+
+
+        let collected_team_1_score = scores.entry(team_1_name).or_insert(Team {goals_scored:0, goals_conceded: 0});
+            collected_team_1_score.goals_scored += team_1_score;
+            collected_team_1_score.goals_conceded += team_2_score;
+
+        let collected_team_2_score = scores.entry(team_2_name).or_insert(Team {goals_scored:0, goals_conceded: 0});
+            collected_team_2_score.goals_scored += team_2_score;
+            collected_team_2_score.goals_conceded += team_1_score;
+
     }
     scores
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
+fn get_results() -> String {
+    let results = "".to_string()
+        + "England,France,4,2\n"
+        + "France,Italy,3,1\n"
+        + "Poland,Spain,2,0\n"
+        + "Germany,England,2,1\n";
+    results
+}
 
-    fn get_results() -> String {
-        let results = "".to_string()
-            + "England,France,4,2\n"
-            + "France,Italy,3,1\n"
-            + "Poland,Spain,2,0\n"
-            + "Germany,England,2,1\n";
-        results
-    }
+fn main() {
 
-    #[test]
-    fn build_scores() {
-        let scores = build_scores_table(get_results());
+    let scores = build_scores_table(get_results());
 
-        let mut keys: Vec<&String> = scores.keys().collect();
-        keys.sort();
-        assert_eq!(
-            keys,
-            vec!["England", "France", "Germany", "Italy", "Poland", "Spain"]
-        );
-    }
+    let mut keys: Vec<&String> = scores.keys().collect();
+    keys.sort();
+    assert_eq!(
+        keys,
+        vec!["England", "France", "Germany", "Italy", "Poland", "Spain"]
+    );
 
-    #[test]
-    fn validate_team_score_1() {
-        let scores = build_scores_table(get_results());
-        let team = scores.get("England").unwrap();
-        assert_eq!(team.goals_scored, 5);
-        assert_eq!(team.goals_conceded, 4);
-    }
+    let team2 = scores.get("England").unwrap();
+    assert_eq!(team2.goals_scored, 5);
+    assert_eq!(team2.goals_conceded, 4);
 
-    #[test]
-    fn validate_team_score_2() {
-        let scores = build_scores_table(get_results());
-        let team = scores.get("Spain").unwrap();
-        assert_eq!(team.goals_scored, 0);
-        assert_eq!(team.goals_conceded, 2);
+    let team3 = scores.get("Spain").unwrap();
+    assert_eq!(team3.goals_scored, 0);
+    assert_eq!(team3.goals_conceded, 2);
+
+    for (key, val) in scores.iter() {
+        println!("team: {:<10} score: {:<10} conceded: {:<10}", key, val.goals_scored, val.goals_conceded);
     }
 }

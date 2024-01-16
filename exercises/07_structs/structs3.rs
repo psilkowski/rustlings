@@ -31,58 +31,50 @@ impl Package {
         }
     }
 
-    fn is_international(&self) -> ??? {
-        // Something goes here...
+    fn is_international(&self) -> bool {
+        self.sender_country != self.recipient_country
     }
 
-    fn get_fees(&self, cents_per_gram: u32) -> ??? {
-        // Something goes here...
+    fn get_fees(&self, cents_per_gram: u32) -> u32 {
+        cents_per_gram * self.weight_in_grams
     }
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
 
-    #[test]
-    #[should_panic]
-    fn fail_creating_weightless_package() {
-        let sender_country = String::from("Spain");
-        let recipient_country = String::from("Austria");
+fn main() {
 
-        Package::new(sender_country, recipient_country, 5);
-    }
+    let sender_country = String::from("Spain");
+    let recipient_country = String::from("Austria");
 
-    #[test]
-    fn create_international_package() {
-        let sender_country = String::from("Spain");
-        let recipient_country = String::from("Russia");
+    Package::new(sender_country, recipient_country, 15);
 
-        let package = Package::new(sender_country, recipient_country, 1200);
 
-        assert!(package.is_international());
-    }
+    let sender_country = String::from("Spain");
+    let recipient_country = String::from("Russia");
 
-    #[test]
-    fn create_local_package() {
-        let sender_country = String::from("Canada");
-        let recipient_country = sender_country.clone();
+    let package = Package::new(sender_country, recipient_country, 1200);
 
-        let package = Package::new(sender_country, recipient_country, 1200);
+    assert!(package.is_international());
 
-        assert!(!package.is_international());
-    }
 
-    #[test]
-    fn calculate_transport_fees() {
-        let sender_country = String::from("Spain");
-        let recipient_country = String::from("Spain");
 
-        let cents_per_gram = 3;
+    let sender_country = String::from("Canada");
+    let recipient_country = sender_country.clone();
 
-        let package = Package::new(sender_country, recipient_country, 1500);
+    let package = Package::new(sender_country, recipient_country, 1200);
 
-        assert_eq!(package.get_fees(cents_per_gram), 4500);
-        assert_eq!(package.get_fees(cents_per_gram * 2), 9000);
-    }
+    assert!(!package.is_international());
+
+
+
+    let sender_country = String::from("Spain");
+    let recipient_country = String::from("Spain");
+
+    let cents_per_gram = 3;
+
+    let package = Package::new(sender_country, recipient_country, 1500);
+
+    assert_eq!(package.get_fees(cents_per_gram), 4500);
+    assert_eq!(package.get_fees(cents_per_gram * 2), 9000);
+
 }

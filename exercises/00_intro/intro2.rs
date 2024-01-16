@@ -5,8 +5,12 @@
 // Execute `rustlings hint intro2` or use the `hint` watch subcommand for a
 // hint.
 
-// I AM NOT DONE
 
 fn main() {
-    println!("Hello {}!");
+
+    let pi_num: f64 = 22.0 / 7.0;
+    
+    println!("Hello {}!", "world");
+
+    println!("Pi = {:.8}", pi_num);
 }

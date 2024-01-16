@@ -10,8 +10,15 @@
 fn main() {
     let answer = current_favorite_color();
     println!("My current favorite color is {}", answer);
+
+
+    let hello = String::from("Здравствуйте");
+
+    let answer = &hello[0..2];
+
+    println!("[0] of {hello} is {answer}");
 }
 
 fn current_favorite_color() -> String {
-    "blue"
+    String::from("blue")
 }
