@@ -14,16 +14,23 @@ trait AppendBar {
     fn append_bar(self) -> Self;
 }
 
+impl AppendBar for Vec<String> {
+    fn append_bar(self) -> Self {
+        let mut s = Vec::from(self);
+        s.push(String::from("Bar"));
+        s
+    }
+}
+
 // TODO: Implement trait `AppendBar` for a vector of strings.
 
-#[cfg(test)]
-mod tests {
-    use super::*;
+fn main() {
 
-    #[test]
-    fn is_vec_pop_eq_bar() {
-        let mut foo = vec![String::from("Foo")].append_bar();
-        assert_eq!(foo.pop().unwrap(), String::from("Bar"));
-        assert_eq!(foo.pop().unwrap(), String::from("Foo"));
-    }
+    let mut foo = vec![String::from("Foo")].append_bar();
+
+    println!("{:?}", foo);
+
+    assert_eq!(foo.pop().unwrap(), String::from("Bar"));
+    assert_eq!(foo.pop().unwrap(), String::from("Foo"));
+
 }
