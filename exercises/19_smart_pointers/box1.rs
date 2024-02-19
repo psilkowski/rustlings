@@ -22,9 +22,20 @@
 
 #[derive(PartialEq, Debug)]
 pub enum List {
-    Cons(i32, List),
+    Cons(i32, Box<List>),
     Nil,
 }
+
+use List::{Cons, Nil};
+
+pub fn create_empty_list() -> List {
+    Nil
+}
+
+pub fn create_non_empty_list() -> List {
+    Cons(12 , Box::new(Cons(1997, Box::new(Nil))))
+}
+
 
 fn main() {
     println!("This is an empty cons list: {:?}", create_empty_list());
@@ -32,27 +43,8 @@ fn main() {
         "This is a non-empty cons list: {:?}",
         create_non_empty_list()
     );
+
+    assert_eq!(List::Nil, create_empty_list());
+    assert_ne!(create_empty_list(), create_non_empty_list())
 }
 
-pub fn create_empty_list() -> List {
-    todo!()
-}
-
-pub fn create_non_empty_list() -> List {
-    todo!()
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_create_empty_list() {
-        assert_eq!(List::Nil, create_empty_list())
-    }
-
-    #[test]
-    fn test_create_non_empty_list() {
-        assert_ne!(create_empty_list(), create_non_empty_list())
-    }
-}

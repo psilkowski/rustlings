@@ -1,13 +1,4 @@
 
-
-
-
-
-
-
-
-
-
 // copy from https://tfpk.github.io/lifetimekata/chapter_4.html
 
 fn insert_value<'vec_lifetime, 'contents_lifetime>(my_vec: &'vec_lifetime mut Vec<&'contents_lifetime i32>, value: &'contents_lifetime i32) {
