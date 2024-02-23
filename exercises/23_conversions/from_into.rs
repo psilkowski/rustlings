@@ -44,6 +44,55 @@ impl Default for Person {
 
 impl From<&str> for Person {
     fn from(s: &str) -> Person {
+        
+        // step 1.
+        let num_of_chars = s.chars().count();
+        if 0 == num_of_chars {
+            return Person::default();
+        }
+
+        // step 2.
+        let words: Vec<&str> = s.split(',').collect();
+
+        if words.len() < 2 {
+            return Person::default();
+        }
+
+        // step 3.
+        let temp_name = words[0];
+        let temp_age = words[1];
+
+        if temp_name.is_empty() {
+            return Person::default();
+        }
+
+        let age_check = temp_age.parse::<usize>();
+        let age: usize;
+
+        match age_check {
+            Ok(x) => age = x,
+            _ => return Person::default()
+        }
+
+        Person { name: String::from(temp_name), age: age }
+
+        // match s.split_once(',') {
+        //     Some((first, second)) => {
+        //         if first.is_empty() {
+        //             Person::default()
+        //         }
+        //         else if let Ok(a) = second.parse::<usize>()
+        //         {
+        //             Person {name: first.into(), age: a}
+        //         }
+        //         else
+        //         {
+        //             Person::default()
+        //         }
+        //     },
+        //     _ => Person::default()
+
+        // } // end of match
     }
 }
 
@@ -54,87 +103,55 @@ fn main() {
     let p2: Person = "Gerald,70".into();
     println!("{:?}", p1);
     println!("{:?}", p2);
+
+    // Test that the default person is 30 year old John
+    let dp = Person::default();
+    assert_eq!(dp.name, "John");
+    assert_eq!(dp.age, 30);
+
+    // Test that John is returned when bad string is provided
+    let p = Person::from("");
+    assert_eq!(p.name, "John");
+    assert_eq!(p.age, 30);
+
+    // Test that "Mark,20" works
+    let p = Person::from("Mark,20");
+    assert_eq!(p.name, "Mark");
+    assert_eq!(p.age, 20);
+
+    // Test that "Mark,twenty" will return the default person due to an
+    // error in parsing age
+    let p = Person::from("Mark,twenty");
+    assert_eq!(p.name, "John");
+    assert_eq!(p.age, 30);
+
+    let p: Person = Person::from("Mark");
+    assert_eq!(p.name, "John");
+    assert_eq!(p.age, 30);
+
+    let p: Person = Person::from("Mark,");
+    assert_eq!(p.name, "John");
+    assert_eq!(p.age, 30);
+
+    let p: Person = Person::from(",1");
+    assert_eq!(p.name, "John");
+    assert_eq!(p.age, 30);
+
+    let p: Person = Person::from(",");
+    assert_eq!(p.name, "John");
+    assert_eq!(p.age, 30);
+
+    let p: Person = Person::from(",one");
+    assert_eq!(p.name, "John");
+    assert_eq!(p.age, 30);
+
+    let p: Person = Person::from("Mike,32,");
+    assert_eq!(p.name, "Mike");
+    assert_eq!(p.age, 32);
+
+    let p: Person = Person::from("Mike,32,man");
+    assert_eq!(p.name, "Mike");
+    assert_eq!(p.age, 32);
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
-    #[test]
-    fn test_default() {
-        // Test that the default person is 30 year old John
-        let dp = Person::default();
-        assert_eq!(dp.name, "John");
-        assert_eq!(dp.age, 30);
-    }
-    #[test]
-    fn test_bad_convert() {
-        // Test that John is returned when bad string is provided
-        let p = Person::from("");
-        assert_eq!(p.name, "John");
-        assert_eq!(p.age, 30);
-    }
-    #[test]
-    fn test_good_convert() {
-        // Test that "Mark,20" works
-        let p = Person::from("Mark,20");
-        assert_eq!(p.name, "Mark");
-        assert_eq!(p.age, 20);
-    }
-    #[test]
-    fn test_bad_age() {
-        // Test that "Mark,twenty" will return the default person due to an
-        // error in parsing age
-        let p = Person::from("Mark,twenty");
-        assert_eq!(p.name, "John");
-        assert_eq!(p.age, 30);
-    }
 
-    #[test]
-    fn test_missing_comma_and_age() {
-        let p: Person = Person::from("Mark");
-        assert_eq!(p.name, "John");
-        assert_eq!(p.age, 30);
-    }
-
-    #[test]
-    fn test_missing_age() {
-        let p: Person = Person::from("Mark,");
-        assert_eq!(p.name, "John");
-        assert_eq!(p.age, 30);
-    }
-
-    #[test]
-    fn test_missing_name() {
-        let p: Person = Person::from(",1");
-        assert_eq!(p.name, "John");
-        assert_eq!(p.age, 30);
-    }
-
-    #[test]
-    fn test_missing_name_and_age() {
-        let p: Person = Person::from(",");
-        assert_eq!(p.name, "John");
-        assert_eq!(p.age, 30);
-    }
-
-    #[test]
-    fn test_missing_name_and_invalid_age() {
-        let p: Person = Person::from(",one");
-        assert_eq!(p.name, "John");
-        assert_eq!(p.age, 30);
-    }
-
-    #[test]
-    fn test_trailing_comma() {
-        let p: Person = Person::from("Mike,32,");
-        assert_eq!(p.name, "Mike");
-        assert_eq!(p.age, 32);
-    }
-
-    #[test]
-    fn test_trailing_comma_and_some_string() {
-        let p: Person = Person::from("Mike,32,man");
-        assert_eq!(p.name, "Mike");
-        assert_eq!(p.age, 32);
-    }
-}
